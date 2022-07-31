@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const moment = require("moment");
+const fs = require("fs");
 
 // local imports
 const { userJoined, leaveRoom, getCurrentUser, getRoomUsers } = require("./utils/users");
@@ -58,11 +59,14 @@ io.on("connection", (socket) => {
     try {
       const filePath = generateFile(language, code);
       const output = await executePython(filePath);
+      fs.unlinkSync(filePath);
+
       endDate = new Date();
       executionTime = moment(endDate).diff(submittedAt, "millisecond", true);
       // return the result for every user in the room
       io.to(room).emit("run_result", { submittedAt: moment(submittedAt).format("h:mm:ss a"), executionTime, output });
     } catch (_) {
+      console.log(_);
       io.to(room).emit("run_result", {
         submittedAt: moment(submittedAt).format("h:mm:ss a"),
         executionTime: executionTime ?? ">1000",

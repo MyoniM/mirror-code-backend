@@ -64,11 +64,16 @@ io.on("connection", (socket) => {
       io.to(room).emit("run_result", { submittedAt: moment(submittedAt).format("h:mm:ss a"), executionTime, output });
     } catch (_) {
       io.to(room).emit("run_result", {
-        submittedAt: submittedAt.format("h:mm:ss a"),
+        submittedAt: moment(submittedAt).format("h:mm:ss a"),
         executionTime: executionTime ?? ">1000",
         output: { data: "stdout maxBuffer length exceeded. Maybe there is a long running loop in your code?", stderr: true },
       });
     }
+  });
+
+  // Runs when prompt is synced
+  socket.on("sync_prompt", ({ room, prompt }) => {
+    socket.to(room).emit("prompt_sync", prompt);
   });
 
   // Runs when client disconnects

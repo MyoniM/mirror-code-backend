@@ -13,7 +13,7 @@ app.use(express.json());
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "https://mirror-code.web.app/",
+    origin: "https://mirror-code.web.app",
   },
 });
 

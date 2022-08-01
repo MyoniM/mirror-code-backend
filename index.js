@@ -14,6 +14,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "https://mirror-code.web.app",
+    // origin: "*",
   },
 });
 
@@ -31,16 +32,6 @@ io.on("connection", (socket) => {
     // Send users and room info
     io.to(user.room).emit("room_users", { joinedUser: user.username, users: getRoomUsers(user.room) });
     console.log(user);
-  });
-
-  // Runs when a user joins a room and tries to sync
-  socket.on("sync_code", ({ room, code }) => {
-    io.to(room).emit("code_change", code);
-  });
-
-  // Runs when code changes
-  socket.on("code_change", ({ room, code }) => {
-    socket.to(room).emit("code_change", code);
   });
 
   // Runs when user executes code

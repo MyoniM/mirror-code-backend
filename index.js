@@ -54,6 +54,7 @@ io.on("connection", (socket) => {
       executionTime = moment(endDate).diff(submittedAt, "millisecond", true);
       // return the result for every user in the room
       io.to(room).emit("run_result", { submittedAt: moment(submittedAt).format("h:mm:ss a"), executionTime, output });
+      console.log({ submittedAt: moment(submittedAt).format("h:mm:ss a"), executionTime, output });
     } catch (_) {
       console.log(_);
       io.to(room).emit("run_result", {
